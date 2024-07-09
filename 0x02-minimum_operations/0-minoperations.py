@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module to calculate the minimum number of operations"""
 
+
 def minOperations(i):
     """Calculate the fewest number of operations"""
     if i <= 1:
