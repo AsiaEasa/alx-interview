@@ -16,18 +16,6 @@ SCODE = {
 }
 
 
-def code_size(list_data):
-    """
-    Count the codes and file size
-    """
-
-    COUNT["size"] += int(list_data[-1])
-
-    if list_data[-2] in SCODE:
-
-        SCODE[list_data[-2]] += 1
-
-
 def codes():
     """
     Function to print the codes and the number of occurrences
@@ -38,6 +26,18 @@ def codes():
 
         if SCODE[key] != 0:
             print("{}: {}".format(key, SCODE[key]))
+
+
+def code_size(list_data):
+    """
+    Count the codes and file size
+    """
+
+    COUNT["size"] += int(list_data[-1])
+
+    if list_data[-2] in SCODE:
+
+        SCODE[list_data[-2]] += 1
 
 
 if __name__ == "__main__":
