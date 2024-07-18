@@ -1,56 +1,56 @@
 #!/usr/bin/python3
 """
-Parsing function to count file sizes and HTTP status codes from log data
+parsing function
 """
 import sys
 
 
-COUNT = {
+count = {
     "size": 0,
     "lines": 1
 }
 
-SCODE = {
+sCode = {
     "200": 0, "301": 0, "400": 0, "401": 0,
     "403": 0, "404": 0, "405": 0, "500": 0
 }
 
 
-def codes():
+def Codes():
     """
-    Function to print the codes and the number of occurrences
+    function to print the codes and the number of ocurrence
     """
-    print("File size: {}".format(COUNT["size"]))
+    print("File size: {}".format(count["size"]))
 
-    for key in sorted(SCODE.keys()):
+    for key in sorted(sCode.keys()):
 
-        if SCODE[key] != 0:
-            print("{}: {}".format(key, SCODE[key]))
+        if sCode[key] != 0:
+            print("{}: {}".format(key, sCode[key]))
 
 
-def code_size(list_data):
+def CodeSize(listData):
     """
-    Count the codes and file size
+    count the codes and file size
     """
 
-    COUNT["size"] += int(list_data[-1])
+    count["size"] += int(listData[-1])
 
-    if list_data[-2] in SCODE:
+    if listData[-2] in sCode:
 
-        SCODE[list_data[-2]] += 1
+        sCode[listData[-2]] += 1
 
 
 if __name__ == "__main__":
     try:
         for line in sys.stdin:
             try:
-                code_size(line.split(" "))
+                CodeSize(line.split(" "))
             except:
                 pass
-            if COUNT["lines"] % 10 == 0:
-                codes()
-            COUNT["lines"] += 1
+            if count["lines"] % 10 == 0:
+                Codes()
+            count["lines"] += 1
     except KeyboardInterrupt:
-        codes()
+        Codes()
         raise
-    codes()
+    Codes()
