@@ -8,8 +8,11 @@ def validUTF8(data):
     """
     NUM_BYTES = 0
 
-    MASK1 = 1 << 7  # 10000000
-    MASK2 = 1 << 6  # 01000000
+    MASK1 = 1 << 7
+    MASK2 = 1 << 6
+
+    if not data or len(data) == 0:
+        return True
 
     for NUM in data:
         BYTE = NUM & 0xFF
