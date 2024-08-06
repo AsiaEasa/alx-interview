@@ -1,39 +1,24 @@
 #!/usr/bin/node
 
-import aiohttp
-import asyncio
-import sys
+const REQUEST = require('request');
+const UTIL = require('util');
+const FILM_ID = process.argv[2];
+const FILM_URL = `https://swapi-api.alx-tools.com/api/films/${FILM_ID}`;
 
-BASE_URL = "https://swapi-api.alx-tools.com/api/films/"
+const PROMISIFIED_REQUEST = UTIL.promisify(REQUEST);
 
-async def fetch_character(session, url):
-    async with session.get(url) as response:
-        if response.status != 200:
-            print(f"Error: Unable to fetch character details from {url}")
-            return None
-        return await response.json()
-
-async def get_movie_characters(movie_id):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"{BASE_URL}{movie_id}/") as response:
-            if response.status != 200:
-                print("Error: Unable to fetch movie details.")
-                return
-            
-            movie_data = await response.json()
-            character_urls = movie_data['characters']
-            
-            tasks = [fetch_character(session, url) for url in character_urls]
-            characters = await asyncio.gather(*tasks)
-            
-            for character in characters:
-                if character is not None:
-                    print(character['name'])
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script_name.py <MOVIE_ID>")
-        sys.exit(1)
-    
-    movie_id = sys.argv[1]
-    asyncio.run(get_movie_characters(movie_id))
+(async () => {
+  try {
+    const FILM = (await PROMISIFIED_REQUEST(FILM_URL, { json: true })).body;
+    const CHARACTER_URLS = FILM.characters;
+    let index = 0;
+    while (index < CHARACTER_URLS.length) {
+      const CHARACTER_URL = CHARACTER_URLS[index];
+      const CHARACTER = (await PROMISIFIED_REQUEST(CHARACTER_URL, { json: true })).body;
+      console.log(CHARACTER.name);
+      index++;
+    }
+  } catch (ERROR) {
+    console.log('An error occurred:', ERROR);
+  }
+})();
