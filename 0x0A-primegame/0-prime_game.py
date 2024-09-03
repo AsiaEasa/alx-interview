@@ -1,55 +1,57 @@
 #!/usr/bin/python3
-"""Module for Prime game."""
+"""Module for Prime Game."""
 
 
-def S(M):
+def generatePrimeFlags(maxValue):
     """Generates a list where the index represents the number,
        and the value at each index indicates whether it is prime."""
-    P = [True] * (M + 1)
-    P[0] = P[1] = False  # 0 and 1 are not primes
-    P = 2
-    while P * P <= M:
-        if P[P]:
-            for i in range(P * P, M + 1, P):
-                P[i] = False
-        P += 1
-    return P
+    primeFlags = [True] * (maxValue + 1)
+    primeFlags[0] = primeFlags[1] = False  # 0 and 1 are not primes
+    currentPrime = 2
+    while currentPrime * currentPrime <= maxValue:
+        if primeFlags[currentPrime]:
+            for i in range(currentPrime * currentPrime,
+                           maxValue + 1,
+                           currentPrime):
+                primeFlags[i] = False
+        currentPrime += 1
+    return primeFlags
 
 
-def C(P, N):
-    """For each N, count how many primes are available.
-       The winner of the round depends on the parity of
-       this count (odd or even)."""
-    R = 0
-    for i in range(2, N + 1):
-        if P[i]:
-            R += 1
-    return R % 2
+def calculatePrimeCount(primeFlags, limit):
+    """For each limit, count how many primes are available.
+       The winner of the round depends on whether the count
+       of primes is odd or even."""
+    primeCounter = 0
+    for i in range(2, limit + 1):
+        if primeFlags[i]:
+            primeCounter += 1
+    return primeCounter % 2
 
 
 def isWinner(x, nums):
-    """Determine the Round Winner."""
+    """Determine the overall winner of the Prime Game."""
     if x <= 0 or not nums:
         return None
 
-    M = max(nums)
-    P = S(M)
+    maxValue = max(nums)
+    primeFlags = generatePrimeFlags(maxValue)
 
-    M_Wins = 0
-    B_Wins = 0
+    mariaWins = 0
+    benWins = 0
 
-    for N in nums:
-        if N == 1:
-            B_Wins += 1
+    for limit in nums:
+        if limit == 1:
+            benWins += 1
         else:
-            if C(P, N) == 1:
-                M_Wins += 1
+            if calculatePrimeCount(primeFlags, limit) == 1:
+                mariaWins += 1
             else:
-                B_Wins += 1
+                benWins += 1
 
-    if M_Wins > B_Wins:
+    if mariaWins > benWins:
         return "Maria"
-    elif B_Wins > M_Wins:
+    elif benWins > mariaWins:
         return "Ben"
     else:
         return None
